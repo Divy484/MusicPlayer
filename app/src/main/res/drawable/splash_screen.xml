@@ -4,7 +4,7 @@
     <item
         android:drawable="@color/white" />
     <item
-        android:drawable="@drawable/icon"
+        android:drawable="@drawable/music_player_icon_splash_screen"
         android:gravity="center" />
 
 </layer-list>
