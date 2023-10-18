@@ -1,15 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
     <style name="Base.Theme.MusicPlayer" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:forceDarkAllowed">false</item>
     </style>
-
-    <style name="splash_screen" parent="Theme.MaterialComponents.Light.NoActionBar" >
-        <item name="android:windowBackground"> @drawable/splash_screen </item>
-    </style>
-
-    <style name="Theme.MusicPlayer" parent="Base.Theme.MusicPlayer" />
 
     //Theme for Activities
     <style name="coolPink" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -20,6 +16,7 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <item name="android:statusBarColor" tools:targetApi="l">@color/cool_pink</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
 
     //Theme for Navigation Drawer
@@ -31,6 +28,6 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <item name="android:statusBarColor" tools:targetApi="l">@color/cool_pink</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
-
 </resources>

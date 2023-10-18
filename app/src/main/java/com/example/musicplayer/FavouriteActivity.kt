@@ -5,11 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
 
-class PlayerActivity : AppCompatActivity() {
+class FavouriteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.coolPink)
-        setContentView(R.layout.activity_player)
+        setContentView(R.layout.activity_favourite)
 
         var backBtn : ImageButton = findViewById(R.id.back_btn)
         backBtn.setOnClickListener {
