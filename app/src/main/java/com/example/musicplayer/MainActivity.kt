@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
@@ -15,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
+import java.io.File
 import kotlin.system.exitProcess
 
 
@@ -22,20 +24,17 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var musicAdapter: MusicAdapter
+
+    companion object{
+        lateinit var MusicListMA : ArrayList<Music>
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestRuntimePermission()
-        setTheme(R.style.coolPinkNav)
-        setContentView(R.layout.activity_main)
+        initializeLayout()
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
         val navView : NavigationView = findViewById(R.id.nav_view)
-
-        toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, R.string.open, R.string.close)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val shufflebtn : Button = findViewById(R.id.shuffle_btn)
         shufflebtn.setOnClickListener {
@@ -64,23 +63,38 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
-        val musicRV : RecyclerView = findViewById(R.id.musicRV)
-        val musicList = ArrayList<String>()
-        musicList.add("1st Song")
-        musicList.add("2nd Song")
-        musicList.add("3rd Song")
-        musicList.add("4th Song")
-        musicList.add("5th Song")
-        musicRV.setHasFixedSize(true)
-        musicRV.setItemViewCacheSize(13)
-        musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
-        musicAdapter = MusicAdapter(this@MainActivity, musicList)
-        musicRV.adapter = musicAdapter
-
-        val totalSongs : TextView = findViewById(R.id.totalSongs)
-        totalSongs.text = "Total Songs : "+musicAdapter.itemCount
     }
+
+
+
+    @SuppressLint("Recycle", "Range")
+    private fun getAllAudio(): ArrayList<Music>{
+        val tempList = ArrayList<Music>()
+        val selection = MediaStore.Audio.Media.IS_MUSIC + " !=0"
+        val projection = arrayOf(MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATE_ADDED,
+            MediaStore.Audio.Media.DATA)
+        val cursor = this.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null,
+        MediaStore.Audio.Media.DATE_ADDED + " DESC", null)
+        if (cursor != null) {
+            if (cursor.moveToFirst())
+                do {
+                    val titleC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+                    val idC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID))
+                    val albumC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))
+                    val artistC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+                    val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
+                    val durationC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+                    val music = Music(id = idC, title = titleC, album = albumC, artist = artistC, path = pathC, duration = durationC)
+                    val file = File(music.path)
+                    if (file.exists())
+                        tempList.add(music)
+                }while (cursor.moveToNext())
+                cursor.close()
+        }
+        return tempList
+    }
+
     //for request permission
     private fun requestRuntimePermission() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
@@ -108,5 +122,27 @@ class MainActivity : AppCompatActivity() {
         if (toggle.onOptionsItemSelected(item))
             return true
         return super.onOptionsItemSelected(item)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun initializeLayout(){
+        requestRuntimePermission()
+        setTheme(R.style.coolPinkNav)
+        setContentView(R.layout.activity_main)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
+        toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        MusicListMA = getAllAudio()
+        val musicRV : RecyclerView = findViewById(R.id.musicRV)
+        musicRV.setHasFixedSize(true)
+        musicRV.setItemViewCacheSize(13)
+        musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
+        musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
+        musicRV.adapter = musicAdapter
+
+        val totalSongs : TextView = findViewById(R.id.totalSongs)
+        totalSongs.text = "Total Songs : "+musicAdapter.itemCount
     }
 }
