@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    @SuppressLint("Recycle", "Range")
+    @SuppressLint("Recycle", "Range", "SuspiciousIndentation")
     private fun getAllAudio(): ArrayList<Music>{
         val tempList = ArrayList<Music>()
         val selection = MediaStore.Audio.Media.IS_MUSIC + " !=0"
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                     val albumC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))
                     val artistC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
                     val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
-                    val durationC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+                    val durationC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
                     val music = Music(id = idC, title = titleC, album = albumC, artist = artistC, path = pathC, duration = durationC)
                     val file = File(music.path)
                     if (file.exists())

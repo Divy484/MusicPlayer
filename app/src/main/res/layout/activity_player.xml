@@ -65,6 +65,7 @@
                 android:layout_weight="1"/>
 
             <TextView
+                android:id="@+id/songNamePA"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
@@ -84,6 +85,7 @@
                 android:layout_weight="1">
 
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/previousbtnPA"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/baseline_navigate_before_24"
@@ -91,6 +93,7 @@
                     android:backgroundTint="@color/teal_200" />
 
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/playPausebtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/baseline_pause_24"
@@ -101,6 +104,7 @@
                     app:iconTint="@color/white"/>
 
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/nextbtnPA"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/baseline_navigate_next_24"
