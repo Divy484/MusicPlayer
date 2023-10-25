@@ -9,3 +9,22 @@ fun formatDuration(duration: Long): String{
     val seconds = (TimeUnit.SECONDS.convert(duration, TimeUnit.MILLISECONDS) - minutes*TimeUnit.SECONDS.convert(1, TimeUnit.MINUTES))
     return String.format("%02d:%02d", minutes, seconds)
 }
+
+fun setSongPosition(increment: Boolean) {
+    if (increment){
+        if (PlayerActivity.musicListPA.size - 1 == PlayerActivity.songPosition) {
+            PlayerActivity.songPosition = 0
+        }
+        else {
+            ++PlayerActivity.songPosition
+        }
+    }
+    else{
+        if (0 == PlayerActivity.songPosition) {
+            PlayerActivity.songPosition = PlayerActivity.musicListPA.size-1
+        }
+        else {
+            --PlayerActivity.songPosition
+        }
+    }
+}

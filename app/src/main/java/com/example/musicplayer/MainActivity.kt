@@ -32,13 +32,23 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeLayout()
+        setTheme(R.style.coolPinkNav)
+        setContentView(R.layout.activity_main)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
+        toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        if (requestRuntimePermission())
+            initializeLayout()
 
         val navView : NavigationView = findViewById(R.id.nav_view)
 
-        val shufflebtn : Button = findViewById(R.id.shuffle_btn)
-        shufflebtn.setOnClickListener {
-            startActivity(Intent(this,PlayerActivity::class.java))
+        val shuffleBtn : Button = findViewById(R.id.shuffle_btn)
+        shuffleBtn.setOnClickListener {
+            intent.putExtra("index", 0)
+            intent.putExtra("class", "MainActivity")
+            startActivity(Intent(this@MainActivity,PlayerActivity::class.java))
             finish()
         }
 
@@ -96,10 +106,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     //for request permission
-    private fun requestRuntimePermission() {
+    private fun requestRuntimePermission(): Boolean {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),13)
+            return false
         }
+        return true
     }
 
     override fun onRequestPermissionsResult(
@@ -111,6 +123,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 13){
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
+                initializeLayout()
             }
             else{
                 ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),13)
@@ -126,14 +139,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun initializeLayout(){
-        requestRuntimePermission()
-        setTheme(R.style.coolPinkNav)
-        setContentView(R.layout.activity_main)
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
-        toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, R.string.open, R.string.close)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         MusicListMA = getAllAudio()
         val musicRV : RecyclerView = findViewById(R.id.musicRV)
         musicRV.setHasFixedSize(true)

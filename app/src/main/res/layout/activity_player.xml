@@ -93,7 +93,7 @@
                     android:backgroundTint="@color/teal_200" />
 
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                    android:id="@+id/playPausebtn"
+                    android:id="@+id/playPausebtnPA"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/baseline_pause_24"
