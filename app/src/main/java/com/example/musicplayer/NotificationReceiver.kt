@@ -12,18 +12,15 @@ class NotificationReceiver: BroadcastReceiver() {
             ApplicationClass.PREVIOUS -> prevNextSong(false)
             ApplicationClass.PLAY -> if(PlayerActivity.isPlaying) pauseMusic() else playMusic()
             ApplicationClass.NEXT -> prevNextSong(true)
-            ApplicationClass.EXIT -> {
-                PlayerActivity.musicService!!.stopForeground(true)
-                PlayerActivity.musicService = null
-                exitProcess(1)
-            }
+            ApplicationClass.EXIT -> exitApp()
         }
     }
 
+
     private fun playMusic() {
         PlayerActivity.isPlaying = true
-        PlayerActivity.musicService!!.mediaPlayer!!.start()
-        PlayerActivity.musicService!!.showNotification(R.drawable.baseline_pause_24)
+        PlayerActivity.musicService?.mediaPlayer?.start()
+        PlayerActivity.musicService?.showNotification(R.drawable.baseline_pause_24)
         PlayerActivity.binding.playPausebtnPA.setIconResource(R.drawable.baseline_pause_24)
     }
 

@@ -11,9 +11,8 @@ class PlaylistActivity : AppCompatActivity() {
         setTheme(R.style.coolPink)
         setContentView(R.layout.activity_playlist)
 
-        var backBtn : ImageButton = findViewById(R.id.back_btn)
-        backBtn.setOnClickListener {
-            startActivity(Intent(this,MainActivity::class.java))
+        val backBtnPLA : ImageButton = findViewById(R.id.backBtnPLA)
+        backBtnPLA.setOnClickListener {
             finish()
         }
     }

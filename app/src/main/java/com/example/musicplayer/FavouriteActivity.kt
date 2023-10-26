@@ -11,9 +11,8 @@ class FavouriteActivity : AppCompatActivity() {
         setTheme(R.style.coolPink)
         setContentView(R.layout.activity_favourite)
 
-        var backBtn : ImageButton = findViewById(R.id.back_btn)
-        backBtn.setOnClickListener {
-            startActivity(Intent(this,MainActivity::class.java))
+        val backBtnFA : ImageButton = findViewById(R.id.backBtnFA)
+        backBtnFA.setOnClickListener {
             finish()
         }
     }
