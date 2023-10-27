@@ -184,6 +184,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
     private fun initializeLayout(){
         songPosition = intent.getIntExtra("index", 0)
         when(intent.getStringExtra("class")){
+            "MusicAdapterSearch" -> {
+                musicListPA.addAll(MainActivity.musicListSearch)
+                setLayout()
+            }
             "MusicAdapter" -> {
                 musicListPA.addAll(MainActivity.MusicListMA)
                 setLayout()
