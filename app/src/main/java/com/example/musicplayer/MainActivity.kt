@@ -4,16 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -22,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import java.io.File
-import kotlin.system.exitProcess
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,12 +34,20 @@ class MainActivity : AppCompatActivity() {
         lateinit var MusicListMA : ArrayList<Music>
         lateinit var musicListSearch : ArrayList<Music>
         var search : Boolean = false
+        var themeIndex : Int = 0
+        val currentTheme = arrayOf(R.style.coolPink, R.style.coolBlue, R.style.coolGreen, R.style.coolPurple, R.style.coolBlack)
+        val currentThemeNav = arrayOf(R.style.coolPinkNav, R.style.coolBlueNav, R.style.coolGreenNav, R.style.coolPurpleNav, R.style.coolBlackNav)
+        val currentGradient = arrayOf(R.drawable.gradiant_pink, R.drawable.gradiant_blue, R.drawable.gradiant_green, R.drawable.gradiant_purple, R.drawable.gradiant_black)
+        var sortOrder : Int = 0
+        val sortingList = arrayOf(MediaStore.Audio.Media.DATE_ADDED + "DESC", MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.SIZE + "DESC")
     }
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.coolPinkNav)
+        val themeEditor = getSharedPreferences("THEMES", MODE_PRIVATE)
+        themeIndex = themeEditor.getInt("themeIndex", 0)
+        setTheme(currentThemeNav[themeIndex])
         setContentView(R.layout.activity_main)
         val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
         toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, R.string.open, R.string.close)
@@ -51,31 +59,11 @@ class MainActivity : AppCompatActivity() {
 
         val navView : NavigationView = findViewById(R.id.nav_view)
 
-        val shuffleBtn : Button = findViewById(R.id.shuffle_btn)
-        shuffleBtn.setOnClickListener {
-            intent.putExtra("index", 0)
-            intent.putExtra("class", "MainActivity")
-            startActivity(Intent(this@MainActivity,PlayerActivity::class.java))
-            finish()
-        }
-
-        val favBtn : Button = findViewById(R.id.favourite_btn)
-        favBtn.setOnClickListener {
-            startActivity(Intent(this,FavouriteActivity::class.java))
-            finish()
-        }
-
-        val playlistBtn : Button = findViewById(R.id.playlist_btn)
-        playlistBtn.setOnClickListener {
-            startActivity(Intent(this,PlaylistActivity::class.java))
-            finish()
-        }
-
         navView.setNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.navFeedback -> Toast.makeText(baseContext, "Feedback", Toast.LENGTH_SHORT).show()
-                R.id.navSettings -> Toast.makeText(baseContext, "Settings", Toast.LENGTH_SHORT).show()
-                R.id.navAbout -> Toast.makeText(baseContext, "About", Toast.LENGTH_SHORT).show()
+                R.id.navFeedback -> startActivity(Intent(this@MainActivity, FeedbackActivity::class.java))
+                R.id.navSettings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+                R.id.navAbout -> startActivity(Intent(this@MainActivity, AboutActivity::class.java))
                 R.id.navExit -> {
                     val builder = MaterialAlertDialogBuilder(this)
                     builder.setTitle("Exit")
@@ -106,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATE_ADDED,
             MediaStore.Audio.Media.DATA)
         val cursor = this.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null,
-        MediaStore.Audio.Media.DATE_ADDED + " DESC", null)
+            "${MediaStore.Audio.Media.DATE_ADDED} DESC", null)
         if (cursor != null) {
             if (cursor.moveToFirst())
                 do {
@@ -161,6 +149,8 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun initializeLayout(){
         search = false
+        val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
+        sortOrder = sortEditor.getInt("sortOrder", 0)
         MusicListMA = getAllAudio()
         val musicRV : RecyclerView = findViewById(R.id.musicRV)
         musicRV.setHasFixedSize(true)
@@ -180,8 +170,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        //for sorting
+        val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
+        val sortValue = sortEditor.getInt("sortOrder", 0)
+        if (sortOrder != sortValue){
+            sortOrder = sortValue
+            MusicListMA = getAllAudio()
+            musicAdapter.updateMusicList(MusicListMA)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_view_menu, menu)
+        //for setting gradiant
+        findViewById<LinearLayout>(R.id.linearLayoutNav)?.setBackgroundResource(currentGradient[themeIndex])
         val searchView = menu?.findItem(R.id.searchView)?.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean = true

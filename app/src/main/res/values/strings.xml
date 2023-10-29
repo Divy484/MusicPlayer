@@ -26,4 +26,11 @@
     <string name="min_30">30 minutes</string>
     <string name="min_60">60 minutes</string>
     <string name="search_view">Search View</string>
+    <string name="topic_feedback">Topic i.e. Suggestion, Error, etc.</string>
+    <string name="email_feedback">Email Address (Optional)</string>
+    <string name="send">Send</string>
+    <string name="set_theme">Set Theme</string>
+    <string name="sort_by">Sort By</string>
+    <string name="version_name">Version Name</string>
+    <string name="app_version_name">1.0.0</string>
 </resources>

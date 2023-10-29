@@ -1,5 +1,6 @@
 package com.example.musicplayer
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -36,6 +37,7 @@ class MusicAdapter(private val context: Context, private var musicList: ArrayLis
         return musicList.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateMusicList(searchList : ArrayList<Music>){
         musicList = ArrayList()
         musicList.addAll(searchList)

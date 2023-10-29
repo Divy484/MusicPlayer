@@ -42,7 +42,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.coolPink)
+        setTheme(MainActivity.currentTheme[MainActivity.themeIndex])
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //for service
@@ -144,8 +144,9 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
     }
 
     private fun setLayout(){
-        val songName : TextView = findViewById(R.id.songNamePA)
-        songName.text = musicListPA[songPosition].title
+        if (musicListPA.isNotEmpty() && songPosition < musicListPA.size) {
+            binding.songNamePA.text = musicListPA[songPosition].title
+        }
         val repeatBtnPA : ImageButton = findViewById(R.id.repeatBtnPA)
         val timerBtnPA : ImageButton = findViewById(R.id.timerBtnPA)
         if(repeat){
